@@ -24,6 +24,18 @@ class BattleMap {
     return positions[Math.floor(Math.random()*positions.length)]
   }
 
+  get_position_player(row, column) {
+    return this.battleMap[row][column].player
+  }
+
+  get_position_strength(row, column) {
+    return this.battleMap[row][column].strength
+  }
+
+  is_valid_position(row, column) {
+    return 0 <= row < this.rows && 0 <= column < this.columns ? true : false
+  }
+
   render() {
     this.battleMap.map( row => this._render_row(row) )
   }

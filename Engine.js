@@ -13,9 +13,15 @@ class Engine {
     }
   }
 
-  add_player(player) {
-    const [row, column] = this.battleMap.get_an_untaken_position()
-    this.battleMap.player_take_position(player, row, column)
+  // if position was provided, player will born there
+  // if position was not provides, player will born at a random untaken place
+  add_player(player, row, column) {
+    if(arguments.length === 1) {
+      const [row, column] = this.battleMap.get_an_untaken_position()
+      this.battleMap.player_take_position(player, row, column)
+    } else {
+      this.battleMap.player_take_position(player, row, column)
+    }
   }
 
   // check ?(invade) at least adjacent to himself
