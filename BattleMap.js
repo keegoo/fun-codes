@@ -10,7 +10,7 @@ class BattleMap {
     this.columns = columns
 
     // setting
-    this._init_strength = 10
+    this._init_strength = 9
 
     this.battleMap = this._create_map(rows, columns)
   }
@@ -22,6 +22,10 @@ class BattleMap {
   get_an_untaken_position() {
     const positions = this._calculate_untaken_positions(this.battleMap)
     return positions[Math.floor(Math.random()*positions.length)]
+  }
+
+  decline_all_strength() {
+    this._decline_strength(this.battleMap)
   }
 
   get_position_player(row, column) {
@@ -37,6 +41,9 @@ class BattleMap {
   }
 
   render() {
+    console.log("")
+    console.log("HERE's THE BATTLE FIELD")
+    console.log("-----------------------")
     this.battleMap.map( row => this._render_row(row) )
   }
 
@@ -75,8 +82,20 @@ class BattleMap {
     return empty_blocks
   }
 
+  _decline_strength(battleMap) {
+    const rows = battleMap.length
+    const columns = battleMap[0].length
+    for (let row = 0; row < rows; row ++) {
+      for(let column = 0; column < columns; column ++) {
+        if(battleMap[row][column].strength >= 0) {
+          battleMap[row][column].strength -- 
+        }
+      }
+    }
+  }
+
   _render_row(row) {
-    const x = row.map( dot => dot.player == EMPTY_BLOCK ? '*' : dot.player).join(' ')
+    const x = row.map( dot => dot.player == EMPTY_BLOCK ? ' * ' : `${dot.player}|${dot.strength}`).join(' ')
     console.log(x)
   }
 }
