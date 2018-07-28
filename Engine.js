@@ -2,7 +2,7 @@ const BattleMap = require('./BattleMap.js')
 
 class Engine {
   constructor() {
-    this.battleMap = new BattleMap(6, 6)
+    this.battleMap = new BattleMap(10, 10)
   }
 
   invade(player, row, column) {
@@ -37,8 +37,15 @@ class Engine {
   // * ? * *
   // * * * *
   // * 1 * *
+  //
+  // if the place player wants to invade already belongs to him,
+  // it's still valid.
   _is_valid_invade(player, row, column) {
-    if (this.battleMap.is_valid_position(row + 1, column) 
+    if (this.battleMap.is_valid_position(row, column) 
+      && this.battleMap.get_position_player(row, column) == player) {
+      // player's own land
+      return true
+    } else if (this.battleMap.is_valid_position(row + 1, column) 
       && this.battleMap.get_position_player(row + 1, column) == player) {
       return true
     } else if (this.battleMap.is_valid_position(row - 1, column)
