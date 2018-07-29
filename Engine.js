@@ -1,8 +1,31 @@
 const BattleMap = require('./BattleMap.js')
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: false
+})
+
 
 class Engine {
   constructor() {
     this.battleMap = new BattleMap(10, 10)
+  }
+
+  main_loop() {
+    let stop = false
+
+    // keep reading from stdin until 'stop'
+    rl.on('line', line => {
+      this.battleMap.render()
+      if(line.toLowerCase() === 'stop') {
+        stop = true
+        process.stdin.pause()
+      } else {
+        console.log(line.split(', '))
+      }
+    })
   }
 
   invade(player, row, column) {
