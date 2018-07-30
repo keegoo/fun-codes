@@ -29,6 +29,7 @@ class BattleMap {
   }
 
   get_position_player(row, column) {
+    console.log(`row: ${row}, column:${column}`)
     return this.battleMap[row][column].player
   }
 
@@ -62,8 +63,8 @@ class BattleMap {
 
   _create_map(rows, columns) {
     return Array.from(Array(this.rows), (x, i) => {
-      return Array.from(Array(this.columns), (x, i) => { 
-        return {player: 0, strength: 0} 
+      return Array.from(Array(this.columns), (x, i) => {
+        return {player: 0, strength: 0}
       })
     })
   }
@@ -88,7 +89,7 @@ class BattleMap {
     for (let row = 0; row < rows; row ++) {
       for(let column = 0; column < columns; column ++) {
         if(battleMap[row][column].strength >= 0) {
-          battleMap[row][column].strength -- 
+          battleMap[row][column].strength --
         }
       }
     }

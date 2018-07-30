@@ -2,23 +2,8 @@ const BattleMap = require('./BattleMap.js')
 const Engine = require('./Engine.js')
 
 e = new Engine()
-e.add_player(1, 2, 2)
-e.add_player(2, 5, 5)
-e.add_player(3)
-e.add_player(4)
+e.main_loop()
 
-e.invade(1, 2, 3)
-e.battleMap.decline_all_strength()
-e.invade(1, 2, 4)
-e.battleMap.decline_all_strength()
-e.invade(1, 1, 2)
-e.battleMap.decline_all_strength()
-e.invade(1, 1, 2)
-e.battleMap.decline_all_strength()
-e.invade(1, 4, 7)
-e.battleMap.render()
-e.battleMap.decline_all_strength()
-
-e.invade(2, 4, 5)
-e.invade(2, 5, 6)
-e.battleMap.render()
+// ADD PLAYER 1 | ADD PLAYER 2 | ADD PLAYER 3
+// PLAYER 1 ATTACK (7, 1) | PLAYER 2 ATTACK (2, 0) | PLAYER 3 ATTACK (0, 8)
+// PLAYER 1 ATTACK (2, 3) | PLAYER 2 ATTACK (1, 2) | ADD PLAYER 4
