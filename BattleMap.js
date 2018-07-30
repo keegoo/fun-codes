@@ -29,7 +29,6 @@ class BattleMap {
   }
 
   get_position_player(row, column) {
-    console.log(`row: ${row}, column:${column}`)
     return this.battleMap[row][column].player
   }
 
@@ -38,14 +37,14 @@ class BattleMap {
   }
 
   is_valid_position(row, column) {
-    return 0 <= row < this.rows && 0 <= column < this.columns ? true : false
+    return (row >= 0 && row < this.rows) && (column >= 0 && column < this.columns) ? true : false
   }
 
   render() {
     console.log("")
     console.log("HERE's THE BATTLE FIELD")
     console.log("-----------------------")
-    this.battleMap.map( row => this._render_row(row) )
+    this.battleMap.map( (row, index) => this._render_row(row, index) )
   }
 
   debug() {
@@ -95,9 +94,9 @@ class BattleMap {
     }
   }
 
-  _render_row(row) {
+  _render_row(row, index) {
     const x = row.map( dot => dot.player == EMPTY_BLOCK ? ' * ' : `${dot.player}|${dot.strength}`).join(' ')
-    console.log(x)
+    console.log(`[${index}]: ${x}`)
   }
 }
 

@@ -26,6 +26,7 @@ class Engine {
         // console.log(cmds)
         this.exec_commands(cmds)
       }
+      this.battleMap.decline_all_strength()
       this.battleMap.render()
     })
   }
@@ -72,7 +73,6 @@ class Engine {
 
   exec_commands(cmds) {
     cmds.forEach(cmd => {
-      console.log(cmd)
       if(cmd[0] === 'add') {
         this.add_player(cmd[1])
       } else if(cmd[0] === 'attack') {
