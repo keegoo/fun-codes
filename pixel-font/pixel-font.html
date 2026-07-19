@@ -91,14 +91,18 @@ function createParticles() {
           vy: 0,
           vx: (Math.random() - 0.5) * 1.5,
           settled: false,
-          color: 'rgba(50,50,50,1)'
+          size: Math.floor(Math.random() * 3) + 1,
+          age: 0,
+          emberR: Math.floor(180 + Math.random() * 75),
+          emberG: Math.floor(60 + Math.random() * 60),
+          emberB: Math.floor(20 + Math.random() * 30)
         })
       }
     }
   }
 }
 
-// --- 原始版：灰烬下落堆积 ---
+// --- 灰烬下落堆积（增强版） ---
 function animateAsh() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   for (let p of particles) {
@@ -111,19 +115,33 @@ function animateAsh() {
       if (nextY >= maxY) {
         p.y = maxY
         p.settled = true
-        columnHeights[col] += 2
+        p.age = 0
+        columnHeights[col] += p.size
       } else {
         p.x = nextX
         p.y = nextY
       }
+    } else {
+      p.age++
     }
-    ctx.fillStyle = p.color
-    ctx.fillRect(p.x, p.y, 2, 2)
+    let r, g, b
+    if (!p.settled) {
+      r = p.emberR
+      g = p.emberG
+      b = p.emberB
+    } else {
+      const fade = Math.min(p.age / 90, 1)
+      r = Math.floor(p.emberR + (220 - p.emberR) * fade)
+      g = Math.floor(p.emberG + (220 - p.emberG) * fade)
+      b = Math.floor(p.emberB + (220 - p.emberB) * fade)
+    }
+    ctx.fillStyle = `rgb(${r},${g},${b})`
+    ctx.fillRect(p.x, p.y, p.size, p.size)
   }
   if (particles.some(p => !p.settled)) requestAnimationFrame(animateAsh)
 }
 
-// --- 新版：爆散飞溅效果 ---
+// --- 爆散飞溅效果（增强版） ---
 function animateExplode() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   for (let p of particles) {
@@ -132,8 +150,24 @@ function animateExplode() {
     p.x += p.vx
     p.y += p.vy
     if (p.y > canvas.height) p.y = canvas.height
-    ctx.fillStyle = 'rgba(80,80,80,1)'
-    ctx.fillRect(p.x, p.y, 2, 2)
+    const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
+    let r, g, b
+    if (speed > 3) {
+      r = 255
+      g = Math.floor(100 + Math.random() * 80)
+      b = Math.floor(20 + Math.random() * 40)
+    } else if (speed > 1) {
+      const fade = (speed - 1) / 2
+      r = Math.floor(220 + 35 * fade)
+      g = Math.floor(120 + 40 * fade)
+      b = Math.floor(60 + 20 * fade)
+    } else {
+      r = 180
+      g = 170
+      b = 165
+    }
+    ctx.fillStyle = `rgb(${r},${g},${b})`
+    ctx.fillRect(p.x, p.y, p.size, p.size)
   }
   if (particles.some(p => p.y < canvas.height)) requestAnimationFrame(animateExplode)
 }
@@ -156,6 +190,7 @@ explodeBtn.addEventListener('click', () => {
   for (let p of particles) {
     p.vx = (Math.random() - 0.5) * 6
     p.vy = (Math.random() - 1.5) * 6
+    p.size = Math.floor(Math.random() * 3) + 1
   }
   animateExplode()
 })
