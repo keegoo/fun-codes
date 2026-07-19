@@ -44,6 +44,9 @@ class BattleMap {
     console.log("")
     console.log("HERE's THE BATTLE FIELD")
     console.log("-----------------------")
+    // column header
+    const header = Array.from(Array(this.columns), (_, i) => String(i).padStart(3, ' ')).join(' ')
+    console.log(`     ${header}`)
     this.battleMap.map( (row, index) => this._render_row(row, index) )
   }
 
@@ -57,7 +60,7 @@ class BattleMap {
   _update_map(battleMap, row, column, player, strength) {
     const dot = {player: player, strength: strength}
     const new_row = Object.assign(battleMap[row], {[column]: dot})
-    return Object.assign(battleMap, {row: new_row})
+    return Object.assign(battleMap, {[row]: new_row})
   }
 
   _create_map(rows, columns) {
@@ -87,7 +90,7 @@ class BattleMap {
     const columns = battleMap[0].length
     for (let row = 0; row < rows; row ++) {
       for(let column = 0; column < columns; column ++) {
-        if(battleMap[row][column].strength >= 0) {
+        if(battleMap[row][column].strength > 0) {
           battleMap[row][column].strength --
         }
       }

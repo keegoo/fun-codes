@@ -141,4 +141,8 @@ class Engine {
   }
 }
 
+if (require.main === module) {
+  new Engine().main_loop()
+}
+
 module.exports = Engine
