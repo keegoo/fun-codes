@@ -66,6 +66,14 @@ function resetColumns() {
   columnHeights = new Array(canvas.width).fill(0)
 }
 
+function drawParticleWithGlow(x, y, size, r, g, b, glowIntensity) {
+  ctx.shadowBlur = glowIntensity
+  ctx.shadowColor = `rgb(${r},${g},${b})`
+  ctx.fillStyle = `rgb(${r},${g},${b})`
+  ctx.fillRect(x, y, size, size)
+  ctx.shadowBlur = 0
+}
+
 function drawText(text) {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.font = 'bold 80px Arial'
@@ -125,18 +133,20 @@ function animateAsh() {
       p.age++
     }
     let r, g, b
+    let glowIntensity = 0
     if (!p.settled) {
       r = p.emberR
       g = p.emberG
       b = p.emberB
+      glowIntensity = 8
     } else {
       const fade = Math.min(p.age / 90, 1)
       r = Math.floor(p.emberR + (220 - p.emberR) * fade)
       g = Math.floor(p.emberG + (220 - p.emberG) * fade)
       b = Math.floor(p.emberB + (220 - p.emberB) * fade)
+      glowIntensity = Math.floor(8 * (1 - fade))
     }
-    ctx.fillStyle = `rgb(${r},${g},${b})`
-    ctx.fillRect(p.x, p.y, p.size, p.size)
+    drawParticleWithGlow(p.x, p.y, p.size, r, g, b, glowIntensity)
   }
   if (particles.some(p => !p.settled)) requestAnimationFrame(animateAsh)
 }
@@ -152,22 +162,25 @@ function animateExplode() {
     if (p.y > canvas.height) p.y = canvas.height
     const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
     let r, g, b
+    let glowIntensity = 0
     if (speed > 3) {
       r = 255
       g = Math.floor(100 + Math.random() * 80)
       b = Math.floor(20 + Math.random() * 40)
+      glowIntensity = 12
     } else if (speed > 1) {
       const fade = (speed - 1) / 2
       r = Math.floor(220 + 35 * fade)
       g = Math.floor(120 + 40 * fade)
       b = Math.floor(60 + 20 * fade)
+      glowIntensity = Math.floor(8 * fade)
     } else {
       r = 180
       g = 170
       b = 165
+      glowIntensity = 0
     }
-    ctx.fillStyle = `rgb(${r},${g},${b})`
-    ctx.fillRect(p.x, p.y, p.size, p.size)
+    drawParticleWithGlow(p.x, p.y, p.size, r, g, b, glowIntensity)
   }
   if (particles.some(p => p.y < canvas.height)) requestAnimationFrame(animateExplode)
 }
