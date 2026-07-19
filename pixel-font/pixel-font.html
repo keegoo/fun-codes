@@ -36,6 +36,12 @@ button {
 }
 button:hover { background-color: #005fa3 }
 .button-container { margin-top: 20px }
+.counter {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #555;
+  font-family: monospace;
+}
 </style>
 </head>
 <body>
@@ -49,6 +55,7 @@ button:hover { background-color: #005fa3 }
   <button id="explodeBtn">💥 爆散飞溅</button>
   <button id="resetBtn">🔄 重置文字</button>
 </div>
+<div class="counter" id="particleCounter">粒子数：0</div>
 
 <script>
 const canvas = document.getElementById('c')
@@ -61,6 +68,13 @@ const resetBtn = document.getElementById('resetBtn')
 let particles = []
 const groundY = canvas.height - 10
 let columnHeights = []
+const particleCounter = document.getElementById('particleCounter')
+
+function updateCounter() {
+  const total = particles.length
+  const settled = particles.filter(p => p.settled).length
+  particleCounter.textContent = `粒子数：${total}（已堆积 ${settled}）`
+}
 
 function resetColumns() {
   columnHeights = new Array(canvas.width).fill(0)
@@ -126,6 +140,7 @@ function createParticles() {
       }
     }
   }
+  updateCounter()
 }
 
 // --- 灰烬下落堆积（增强版） ---
@@ -144,6 +159,7 @@ function animateAsh() {
         p.age = 0
         columnHeights[col] += p.size
         smoothColumnsAround(col, 4)
+        updateCounter()
       } else {
         p.x = nextX
         p.y = nextY
@@ -229,6 +245,8 @@ explodeBtn.addEventListener('click', () => {
 
 resetBtn.addEventListener('click', () => {
   resetColumns()
+  particles = []
+  updateCounter()
   drawText(input.value || 'Hello')
 })
 
