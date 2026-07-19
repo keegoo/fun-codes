@@ -66,6 +66,24 @@ function resetColumns() {
   columnHeights = new Array(canvas.width).fill(0)
 }
 
+// Smooth column heights locally around a settled particle
+// to create a natural, less jagged ash pile
+function smoothColumnsAround(col, radius) {
+  const smoothed = [...columnHeights]
+  for (let i = Math.max(0, col - radius); i <= Math.min(canvas.width - 1, col + radius); i++) {
+    let sum = 0
+    let weightSum = 0
+    for (let j = Math.max(0, i - radius); j <= Math.min(canvas.width - 1, i + radius); j++) {
+      const dist = Math.abs(i - j)
+      const weight = Math.max(0, 1 - dist / (radius + 1))
+      sum += columnHeights[j] * weight
+      weightSum += weight
+    }
+    smoothed[i] = Math.max(columnHeights[i], sum / weightSum)
+  }
+  columnHeights = smoothed
+}
+
 function drawParticleWithGlow(x, y, size, r, g, b, glowIntensity) {
   ctx.shadowBlur = glowIntensity
   ctx.shadowColor = `rgb(${r},${g},${b})`
@@ -125,6 +143,7 @@ function animateAsh() {
         p.settled = true
         p.age = 0
         columnHeights[col] += p.size
+        smoothColumnsAround(col, 4)
       } else {
         p.x = nextX
         p.y = nextY
