@@ -46,7 +46,7 @@ class BattleMap {
     console.log("-----------------------")
     // column header
     const header = Array.from(Array(this.columns), (_, i) => String(i).padStart(3, ' ')).join(' ')
-    console.log(`     ${header}`)
+    console.log(`    ${header}`)
     this.battleMap.map( (row, index) => this._render_row(row, index) )
   }
 
